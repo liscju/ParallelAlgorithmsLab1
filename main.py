@@ -61,7 +61,7 @@ def main():
     conductor_y_pos = get_conductor_y_pos()
     conductor_size = get_conductor_size()
     conductor_value = get_conductor_value()
-    print "Hello world from rank=", rank, "pos=", (conductor_x_pos, conductor_y_pos), \
+    print "Hello world from rank=", rank, "conductor_pos=", (conductor_x_pos, conductor_y_pos), \
         " while size=", size, \
         "and conductor_size=", conductor_size, " and conductor_value=", \
         conductor_value
