@@ -29,14 +29,14 @@ def get_conductor_size():
         print "You have to pass conductor size as first argument"
         usage()
     else:
-        return sys.argv[1]
+        return int(sys.argv[1])
 
 def get_conductor_value():
     if len(sys.argv) < 3:
         print "You have to pass conductor value as second argument"
         usage()
     else:
-        return sys.argv[2]
+        return int(sys.argv[2])
 
 def main():
     comm = MPI.COMM_WORLD
