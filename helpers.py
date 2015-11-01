@@ -1,4 +1,4 @@
-__author__ = 'liscju'
+__author__ = 'liscju <piotr.listkiewicz@gmail.com>'
 
 class GridInfo:
     def __init__(self, size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value):
