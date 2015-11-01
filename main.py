@@ -59,10 +59,23 @@ class RowParrallelCalculator:
     def __init__(self, rownum, grid_info):
         self.rownum = rownum
         self.grid_info = grid_info
+        self.initialize_row_values()
+        
+    def initialize_row_values(self):
+        self.row_values = [None] * self.grid_info.get_size()
+        y = self.rownum
+        for x in range(0, self.grid_info.get_size()):
+            if self.grid_info.is_screen_point(x, y):
+                self.row_values[x] = self.grid_info.get_screen_value()
+            elif self.grid_info.is_conductor_point(x, y):
+                self.row_values[x] = self.grid_info.get_conductor_value()
+            else:
+                self.row_values[x] = self.grid_info.get_default_value()
 
     def run(self):
-        #print "Executed parralel executor for rownum=", self.rownum
+        print "Row:", self.rownum, "=", self.row_values
         pass
+
 
 def main():
     comm = MPI.COMM_WORLD
