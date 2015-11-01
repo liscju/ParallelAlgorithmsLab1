@@ -27,13 +27,22 @@ def get_conductor_size():
     else:
         return sys.argv[1]
 
+def get_conductor_value():
+    if len(sys.argv) < 3:
+        print "You have to pass conductor value as second argument"
+        exit(-1)
+    else:
+        return sys.argv[2]
+
 def main():
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     size = comm.Get_size()
     conductor_size = get_conductor_size()
+    conductor_value = get_conductor_value()
     print "Hello world from rank=", rank, " while size=", size, \
-        "and conductor_size=", conductor_size
+        "and conductor_size=", conductor_size, " and conductor_value=", \
+        conductor_value
 
 if __name__ == "__main__":
     main()
