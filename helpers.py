@@ -14,7 +14,7 @@ class GridInfo:
     def get_conductor_value(self):
         return self.conductor_value
 
-    def is_border_point(self, x, y):
+    def is_screen_point(self, x, y):
         return y == 0 or y == self.size - 1 or \
                x == 0 or x == self.size - 1
 
