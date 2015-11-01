@@ -1,8 +1,24 @@
 __author__ = 'liscju <piotr.listkiewicz@gmail.com>'
 
+# Table size is comm.Get_size() x comm.Get_size(),
+# Conductor size is first argument to program, conductor
+#   is placed at the middle of table
+# 
+# For example when com.Get_size() =5, conductor_size=1 table 
+# would look like this(o - border, * - custom cell, x - conductor)
+# o - o - o
+# o - x - o
+# o - o - o
+# For example when com.Get_size() =5, conductor_size=1 table
+# would look like this
+# o - o - o - o - o
+# o - * - * - * - o
+# o - * - x - * - o
+# o - * - * - * - o
+# o - o - o - o - o
+
 import sys
 from mpi4py import MPI
-
 
 def get_conductor_size():
     if len(sys.argv) == 1:
