@@ -104,10 +104,9 @@ class RowParrallelCalculator:
         while True:
             self.__send_row_values_to_neighbours()
             row_values_from_above, row_values_from_below = self.__recv_row_values_from_neighbours()
-            print "Row(", self.rownum, ") received row from above", row_values_from_above, "and from below", row_values_from_below
             stop_condition = self.__calculate_new_row_values(row_values_from_above, row_values_from_below)
-            print "Row:", self.rownum, "=", self.row_values
             if stop_condition:
+                self.__finalize_calculation()
                 break
 
     def __send_row_values_to_neighbours(self):
@@ -140,6 +139,15 @@ class RowParrallelCalculator:
                 self.row_values[x] = (self.row_values[x - 1] + self.row_values[x + 1] +
                                       row_values_from_above[x] + row_values_from_below[x]) / 4
         return True
+
+    def __finalize_calculation(self):
+        if self.rownum == 0:
+            all_values = [self.row_values]
+            for neighbour in range(1, self.grid_info.get_size()):
+                all_values.append(self.comm.recv(source=neighbour))
+            print all_values
+        else:
+            self.comm.send(self.row_values, dest=0)
 
 
 def main():
