@@ -1,14 +1,18 @@
 __author__ = 'liscju'
 
 class GridInfo:
-    def __init__(self, size, conductor_x_pos, conductor_y_pos, conductor_size):
+    def __init__(self, size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value):
         self.size = size
         self.conductor_x_pos = conductor_x_pos
         self.conductor_y_pos = conductor_y_pos
         self.conductor_size = conductor_size
+        self.conductor_value = conductor_value
 
     def get_size(self):
         return self.size
+    
+    def get_conductor_value(self):
+        return self.conductor_value
 
     def is_border_point(self, x, y):
         return y == 0 or y == self.size - 1 or \
