@@ -56,9 +56,9 @@ def get_conductor_value():
         return int(sys.argv[4])
     
 class RowParrallelCalculator:
-    def __init__(self, rownum, gridInfo):
+    def __init__(self, rownum, grid_info):
         self.rownum = rownum
-        self.gridInfo = gridInfo
+        self.grid_info = grid_info
 
     def run(self):
         #print "Executed parralel executor for rownum=", self.rownum
