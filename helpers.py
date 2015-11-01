@@ -1,11 +1,14 @@
 __author__ = 'liscju'
 
-class GridHelper:
+class GridInfo:
     def __init__(self, size, conductor_x_pos, conductor_y_pos, conductor_size):
         self.size = size
         self.conductor_x_pos = conductor_x_pos
         self.conductor_y_pos = conductor_y_pos
         self.conductor_size = conductor_size
+        
+    def get_grid_size(self):
+        return self.size
 
     def is_border_point(self, x, y):
         return y == 0 or y == self.size - 1 or \
