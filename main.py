@@ -20,6 +20,8 @@ __author__ = 'liscju <piotr.listkiewicz@gmail.com>'
 import sys
 from mpi4py import MPI
 
+from helpers import GridInfo
+
 def usage():
     print "You should invoke this with arguments: " \
         "conductor_x_pos, conductor_y_pos, conductor_size, conductor_value"
@@ -52,6 +54,15 @@ def get_conductor_value():
         usage()
     else:
         return int(sys.argv[4])
+    
+class RowParrallelCalculator:
+    def __init__(self, rownum, gridInfo):
+        self.rownum = rownum
+        self.gridInfo = gridInfo
+
+    def run(self):
+        #print "Executed parralel executor for rownum=", self.rownum
+        pass
 
 def main():
     comm = MPI.COMM_WORLD
@@ -61,10 +72,10 @@ def main():
     conductor_y_pos = get_conductor_y_pos()
     conductor_size = get_conductor_size()
     conductor_value = get_conductor_value()
-    print "Hello world from rank=", rank, "conductor_pos=", (conductor_x_pos, conductor_y_pos), \
-        " while size=", size, \
-        "and conductor_size=", conductor_size, " and conductor_value=", \
-        conductor_value
+    
+    gridInfo = GridInfo(size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value)
+    rowParallelCalculator = RowParrallelCalculator(rank, gridInfo)
+    rowParallelCalculator.run()
 
 if __name__ == "__main__":
     main()
