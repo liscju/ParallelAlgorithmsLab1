@@ -15,11 +15,11 @@ class GridInfo:
         return self.conductor_value
     
     def get_screen_value(self):
-        return 0
+        return 0.
     
     def get_default_value(self):
         # It could be any value, i chose 5 just to be different than 0 :P
-        return 5
+        return 5.
 
     def is_screen_point(self, x, y):
         return y == 0 or y == self.size - 1 or \

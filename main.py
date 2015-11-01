@@ -53,7 +53,7 @@ def get_conductor_value():
         print "You have to pass conductor value as fitth argument"
         usage()
     else:
-        return int(sys.argv[4])
+        return float(sys.argv[4])
     
 class RowParrallelCalculator:
     def __init__(self, comm, rownum, grid_info):
