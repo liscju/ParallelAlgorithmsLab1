@@ -6,8 +6,8 @@ class GridInfo:
         self.conductor_x_pos = conductor_x_pos
         self.conductor_y_pos = conductor_y_pos
         self.conductor_size = conductor_size
-        
-    def get_grid_size(self):
+
+    def get_size(self):
         return self.size
 
     def is_border_point(self, x, y):
