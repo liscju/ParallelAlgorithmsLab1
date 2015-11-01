@@ -20,17 +20,21 @@ __author__ = 'liscju <piotr.listkiewicz@gmail.com>'
 import sys
 from mpi4py import MPI
 
+def usage():
+    print "You should invoke this with arguments: conductor_size, conductor_value"
+    exit(-1)
+
 def get_conductor_size():
     if len(sys.argv) == 1:
         print "You have to pass conductor size as first argument"
-        exit(-1)
+        usage()
     else:
         return sys.argv[1]
 
 def get_conductor_value():
     if len(sys.argv) < 3:
         print "You have to pass conductor value as second argument"
-        exit(-1)
+        usage()
     else:
         return sys.argv[2]
 
