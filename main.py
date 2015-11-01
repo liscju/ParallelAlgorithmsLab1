@@ -61,7 +61,7 @@ class RowParrallelCalculator:
         self.rownum = rownum
         self.grid_info = grid_info
         self.initialize_row_values()
-        
+
     def initialize_row_values(self):
         self.row_values = [None] * self.grid_info.get_size()
         y = self.rownum
@@ -74,8 +74,45 @@ class RowParrallelCalculator:
                 self.row_values[x] = self.grid_info.get_default_value()
 
     def run(self):
-        print "Row:", self.rownum, "=", self.row_values
-        pass
+        while True:
+            self.__send_row_values_to_neighbours()
+            row_values_from_above, row_values_from_below = self.__recv_row_values_from_neighbours()
+            print "Row(", self.rownum, ") received row from above", row_values_from_above, "and from below", row_values_from_below
+            stop_condition = self.__calculate_new_row_values(row_values_from_above, row_values_from_below)
+            print "Row:", self.rownum, "=", self.row_values
+            if stop_condition:
+                break
+
+    def __send_row_values_to_neighbours(self):
+        if self.rownum > 0:
+            self.comm.send(self.row_values, dest=self.rownum - 1)
+
+        if self.rownum < self.grid_info.get_size() - 1:
+            self.comm.send(self.row_values, dest=self.rownum + 1)
+
+    def __recv_row_values_from_neighbours(self):
+        if self.rownum > 0:
+            row_values_from_above = self.comm.recv(source=self.rownum - 1)
+        else:
+            row_values_from_above = None
+
+        if self.rownum < self.grid_info.get_size() - 1:
+            row_values_from_below = self.comm.recv(source=self.rownum + 1)
+        else:
+            row_values_from_below = None
+
+        return row_values_from_above, row_values_from_below
+
+    def __calculate_new_row_values(self, row_values_from_above, row_values_from_below):
+        y = self.rownum
+        for x in range(0, self.grid_info.get_size()):
+            if self.grid_info.is_screen_point(x, y) or \
+                    self.grid_info.is_conductor_point(x, y):
+                pass
+            else:
+                self.row_values[x] = (self.row_values[x - 1] + self.row_values[x + 1] +
+                                      row_values_from_above[x] + row_values_from_below[x]) / 4
+        return True
 
 
 def main():
@@ -86,7 +123,7 @@ def main():
     conductor_y_pos = get_conductor_y_pos()
     conductor_size = get_conductor_size()
     conductor_value = get_conductor_value()
-    
+
     gridInfo = GridInfo(size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value)
     rowParallelCalculator = RowParrallelCalculator(comm, rank, gridInfo)
     rowParallelCalculator.run()
