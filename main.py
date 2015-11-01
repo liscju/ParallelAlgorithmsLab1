@@ -56,7 +56,8 @@ def get_conductor_value():
         return int(sys.argv[4])
     
 class RowParrallelCalculator:
-    def __init__(self, rownum, grid_info):
+    def __init__(self, comm, rownum, grid_info):
+        self.comm = comm
         self.rownum = rownum
         self.grid_info = grid_info
         self.initialize_row_values()
@@ -87,7 +88,7 @@ def main():
     conductor_value = get_conductor_value()
     
     gridInfo = GridInfo(size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value)
-    rowParallelCalculator = RowParrallelCalculator(rank, gridInfo)
+    rowParallelCalculator = RowParrallelCalculator(comm, rank, gridInfo)
     rowParallelCalculator.run()
 
 if __name__ == "__main__":
