@@ -1,2 +1,2 @@
 all:
-	mpiexec -n 5 python main.py
+	mpiexec -n 5 python main.py 1
