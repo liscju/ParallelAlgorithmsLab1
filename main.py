@@ -90,13 +90,12 @@ class RowParrallelCalculator:
         self.__initialize_row_values()
 
     def run(self):
-        while True:
+        for i in range(0,1):
             self.__send_row_values_to_neighbours()
             row_values_from_above, row_values_from_below = self.__recv_row_values_from_neighbours()
-            stop_condition = self.__calculate_new_row_values(row_values_from_above, row_values_from_below)
-            if stop_condition:
-                self.__finalize_calculation()
-                break
+            self.__calculate_new_row_values(row_values_from_above, row_values_from_below)
+
+        self.__finalize_calculation()
 
     def __initialize_row_values(self):
         self.row_values = [None] * self.grid_info.get_size()
@@ -138,7 +137,6 @@ class RowParrallelCalculator:
             else:
                 self.row_values[x] = (self.row_values[x - 1] + self.row_values[x + 1] +
                                       row_values_from_above[x] + row_values_from_below[x]) / 4
-        return True
 
     def __finalize_calculation(self):
         if self.rownum == 0:
