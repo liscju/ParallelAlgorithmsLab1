@@ -166,6 +166,36 @@ class RowParrallelCalculator:
         else:
             self.comm.send(self.row_values, dest=0)
 
+class SequenceCalculator:
+    def __init__(self, grid_info):
+        self.grid_info = grid_info
+        self.__initialize_table_values()
+
+    def run(self):
+        for i in range(0, self.grid_info.get_number_of_iteration()):
+            self.__calculate_new_values()
+        print self.table_values
+
+    def __initialize_table_values(self):
+        self.table_values = [[None for x in range(0, self.grid_info.get_size())] for x in range(0, self.grid_info.get_size())]
+        for y in range(0, self.grid_info.get_size()):
+            for x in range(0, self.grid_info.get_size()):
+                if self.grid_info.is_screen_point(x, y):
+                    self.table_values[x][y] = self.grid_info.get_screen_value()
+                elif self.grid_info.is_conductor_point(x, y):
+                    self.table_values[x][y] = self.grid_info.get_conductor_value()
+                else:
+                    self.table_values[x][y] = self.grid_info.get_default_value()
+
+    def __calculate_new_values(self):
+        for y in range(0, self.grid_info.get_size()):
+            for x in range(0, self.grid_info.get_size()):
+                if self.grid_info.is_screen_point(x, y) or self.grid_info.is_conductor_point(x, y):
+                    pass
+                else:
+                    self.table_values[x][y] = (self.table_values[x-1][y] + self.table_values[x+1][y] +
+                                               self.table_values[x][y-1] + self.table_values[x][y+1]) / 4
+
 
 def main():
     if get_program_type() == "parallel":
@@ -184,19 +214,17 @@ def main():
         rowParallelCalculator.run()
 
     elif get_program_type() == "sequential":
-        size = sys.argv.pop(1)
+        size = int(sys.argv.pop(1))
         conductor_x_pos = get_conductor_x_pos()
         conductor_y_pos = get_conductor_y_pos()
         conductor_size = get_conductor_size()
         conductor_value = get_conductor_value()
         number_of_iteration = get_number_of_iteration()
 
-        print "Size=", size, "conductor_x=", conductor_x_pos, "conductor_y=", conductor_y_pos, \
-            "conductor_size=", conductor_size, "conductor_value=", conductor_value, "number_of_iter=", \
-            number_of_iteration
-
         gridInfo = GridInfo(size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value,
                             number_of_iteration)
+        table_calculator = SequenceCalculator(gridInfo)
+        table_calculator.run()
 
     else:
         print "Unrecognized program type in seventh argument:", get_program_type()
