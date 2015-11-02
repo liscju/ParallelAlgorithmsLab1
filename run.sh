@@ -10,3 +10,7 @@ if [ $7 == "parallel" ]; then
     mpiexec -n $1 python main.py $2 $3 $4 $5 $6 parallel
 fi
 
+if [ $7 == "sequential" ]; then
+    python main.py $1 $2 $3 $4 $5 $6 sequential
+fi
+

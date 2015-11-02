@@ -62,10 +62,10 @@ def get_number_of_iteration():
     
 def get_program_type():
     if len(sys.argv) < 7:
-        print "You have to pass program type in seventh argument"
+        print "You have to pass program type as last argument"
         usage()
     else:
-        return sys.argv[6]
+        return sys.argv[-1]
 
 class GridInfo:
     def __init__(self, size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value,
@@ -182,6 +182,25 @@ def main():
                             number_of_iteration)
         rowParallelCalculator = RowParrallelCalculator(comm, rank, gridInfo)
         rowParallelCalculator.run()
+
+    elif get_program_type() == "sequential":
+        size = sys.argv.pop(1)
+        conductor_x_pos = get_conductor_x_pos()
+        conductor_y_pos = get_conductor_y_pos()
+        conductor_size = get_conductor_size()
+        conductor_value = get_conductor_value()
+        number_of_iteration = get_number_of_iteration()
+
+        print "Size=", size, "conductor_x=", conductor_x_pos, "conductor_y=", conductor_y_pos, \
+            "conductor_size=", conductor_size, "conductor_value=", conductor_value, "number_of_iter=", \
+            number_of_iteration
+
+        gridInfo = GridInfo(size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value,
+                            number_of_iteration)
+
+    else:
+        print "Unrecognized program type in seventh argument:", get_program_type()
+        usage()
 
 if __name__ == "__main__":
     main()
