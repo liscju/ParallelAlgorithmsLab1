@@ -162,7 +162,7 @@ class RowParrallelCalculator:
             all_values = [self.row_values]
             for neighbour in range(1, self.grid_info.get_size()):
                 all_values.append(self.comm.recv(source=neighbour))
-            print all_values
+            # print all_values
         else:
             self.comm.send(self.row_values, dest=0)
 
@@ -174,7 +174,7 @@ class SequenceCalculator:
     def run(self):
         for i in range(0, self.grid_info.get_number_of_iteration()):
             self.__calculate_new_values()
-        print self.table_values
+        # print self.table_values
 
     def __initialize_table_values(self):
         self.table_values = [[None for x in range(0, self.grid_info.get_size())] for x in range(0, self.grid_info.get_size())]
