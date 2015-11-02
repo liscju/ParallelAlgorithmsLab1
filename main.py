@@ -22,7 +22,7 @@ from mpi4py import MPI
 
 def usage():
     print "You should invoke this with arguments: " \
-        "conductor_x_pos, conductor_y_pos, conductor_size, conductor_value"
+        "conductor_x_pos, conductor_y_pos, conductor_size, conductor_value, number_of_iterations"
     exit(-1)
     
 def get_conductor_x_pos():
@@ -53,19 +53,31 @@ def get_conductor_value():
     else:
         return float(sys.argv[4])
 
+def get_number_of_iteration():
+    if len(sys.argv) < 6:
+        print "You have to pass number of iteration as sixth argument"
+        usage()
+    else:
+        return int(sys.argv[5])
+
 class GridInfo:
-    def __init__(self, size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value):
+    def __init__(self, size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value,
+                 number_of_iteration):
         self.size = size
         self.conductor_x_pos = conductor_x_pos
         self.conductor_y_pos = conductor_y_pos
         self.conductor_size = conductor_size
         self.conductor_value = conductor_value
+        self.number_of_iteration = number_of_iteration
 
     def get_size(self):
         return self.size
 
     def get_conductor_value(self):
         return self.conductor_value
+
+    def get_number_of_iteration(self):
+        return self.number_of_iteration
 
     def get_screen_value(self):
         return 0.
@@ -90,7 +102,7 @@ class RowParrallelCalculator:
         self.__initialize_row_values()
 
     def run(self):
-        for i in range(0,1):
+        for i in range(0, self.grid_info.get_number_of_iteration()):
             self.__send_row_values_to_neighbours()
             row_values_from_above, row_values_from_below = self.__recv_row_values_from_neighbours()
             self.__calculate_new_row_values(row_values_from_above, row_values_from_below)
@@ -156,8 +168,10 @@ def main():
     conductor_y_pos = get_conductor_y_pos()
     conductor_size = get_conductor_size()
     conductor_value = get_conductor_value()
+    number_of_iteration = get_number_of_iteration()
 
-    gridInfo = GridInfo(size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value)
+    gridInfo = GridInfo(size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value,
+                        number_of_iteration)
     rowParallelCalculator = RowParrallelCalculator(comm, rank, gridInfo)
     rowParallelCalculator.run()
 
