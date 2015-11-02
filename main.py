@@ -22,7 +22,7 @@ from mpi4py import MPI
 
 def usage():
     print "You should invoke this with arguments: " \
-        "conductor_x_pos, conductor_y_pos, conductor_size, conductor_value, number_of_iterations"
+        "conductor_x_pos, conductor_y_pos, conductor_size, conductor_value, number_of_iterations, [sequential|parallel]"
     exit(-1)
     
 def get_conductor_x_pos():
@@ -59,6 +59,13 @@ def get_number_of_iteration():
         usage()
     else:
         return int(sys.argv[5])
+    
+def get_program_type():
+    if len(sys.argv) < 7:
+        print "You have to pass program type in seventh argument"
+        usage()
+    else:
+        return sys.argv[6]
 
 class GridInfo:
     def __init__(self, size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value,
@@ -161,19 +168,20 @@ class RowParrallelCalculator:
 
 
 def main():
-    comm = MPI.COMM_WORLD
-    rank = comm.Get_rank()
-    size = comm.Get_size()
-    conductor_x_pos = get_conductor_x_pos()
-    conductor_y_pos = get_conductor_y_pos()
-    conductor_size = get_conductor_size()
-    conductor_value = get_conductor_value()
-    number_of_iteration = get_number_of_iteration()
+    if get_program_type() == "parallel":
+        comm = MPI.COMM_WORLD
+        rank = comm.Get_rank()
+        size = comm.Get_size()
+        conductor_x_pos = get_conductor_x_pos()
+        conductor_y_pos = get_conductor_y_pos()
+        conductor_size = get_conductor_size()
+        conductor_value = get_conductor_value()
+        number_of_iteration = get_number_of_iteration()
 
-    gridInfo = GridInfo(size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value,
-                        number_of_iteration)
-    rowParallelCalculator = RowParrallelCalculator(comm, rank, gridInfo)
-    rowParallelCalculator.run()
+        gridInfo = GridInfo(size, conductor_x_pos, conductor_y_pos, conductor_size, conductor_value,
+                            number_of_iteration)
+        rowParallelCalculator = RowParrallelCalculator(comm, rank, gridInfo)
+        rowParallelCalculator.run()
 
 if __name__ == "__main__":
     main()
