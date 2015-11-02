@@ -89,6 +89,15 @@ class RowParrallelCalculator:
         self.grid_info = grid_info
         self.__initialize_row_values()
 
+    def run(self):
+        while True:
+            self.__send_row_values_to_neighbours()
+            row_values_from_above, row_values_from_below = self.__recv_row_values_from_neighbours()
+            stop_condition = self.__calculate_new_row_values(row_values_from_above, row_values_from_below)
+            if stop_condition:
+                self.__finalize_calculation()
+                break
+
     def __initialize_row_values(self):
         self.row_values = [None] * self.grid_info.get_size()
         y = self.rownum
@@ -99,15 +108,6 @@ class RowParrallelCalculator:
                 self.row_values[x] = self.grid_info.get_conductor_value()
             else:
                 self.row_values[x] = self.grid_info.get_default_value()
-
-    def run(self):
-        while True:
-            self.__send_row_values_to_neighbours()
-            row_values_from_above, row_values_from_below = self.__recv_row_values_from_neighbours()
-            stop_condition = self.__calculate_new_row_values(row_values_from_above, row_values_from_below)
-            if stop_condition:
-                self.__finalize_calculation()
-                break
 
     def __send_row_values_to_neighbours(self):
         if self.rownum > 0:
