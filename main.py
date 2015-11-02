@@ -87,9 +87,9 @@ class RowParrallelCalculator:
         self.comm = comm
         self.rownum = rownum
         self.grid_info = grid_info
-        self.initialize_row_values()
+        self.__initialize_row_values()
 
-    def initialize_row_values(self):
+    def __initialize_row_values(self):
         self.row_values = [None] * self.grid_info.get_size()
         y = self.rownum
         for x in range(0, self.grid_info.get_size()):
